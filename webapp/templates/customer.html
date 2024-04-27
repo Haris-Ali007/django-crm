@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-md-6 offset-md-3"">
+<h3>Update Customer Record</h3>
+<br>
+    
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a class="btn btn-danger" onclick="confirmDelete(event)" href="{% url 'delete_customer' customer_id %}" role="button">Delete</a>
+</form>
+
+<script>
+    function confirmDelete(event) {
+      if (!confirm("Are you sure you want to delete the record?")) {
+        event.preventDefault(); // Prevent the default action (i.e., following the link)
+      }
+    }
+</script>
+
+
+{% endblock content %}

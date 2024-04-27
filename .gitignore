@@ -1,0 +1,4 @@
+djangocrm/__pycache__
+webapp/__pycache__
+webapp/migrations
+.env
