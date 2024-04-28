@@ -8,7 +8,7 @@
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn btn-success">Update</button>
     <a class="btn btn-danger" onclick="confirmDelete(event)" href="{% url 'delete_customer' customer_id %}" role="button">Delete</a>
 </form>
 

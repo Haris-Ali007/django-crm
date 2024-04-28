@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import SignUpForm, CustomerRecordForm
+from .forms import SignUpForm, CustomerRecordForm, ProductInfoForm, PurchaseInfoForm
 from .models import Customer, Product, Purchase
 
 def index(request):
-    records = Customer.objects.all()
+    records = Customer.objects.all().order_by('id')
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -50,7 +50,7 @@ def register_user(request):
 
 @login_required(login_url='/webapp/')
 def product_records(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('id')
     return render(request, 'products.html', {'products':products})
 
 @login_required(login_url='/webapp/')
@@ -66,7 +66,7 @@ def update_customer(request, cid):
         form.save()
         messages.success(request, message='Records updated successfully')
         return redirect('index')
-    return render(request, 'customer.html', {'form':form, 'customer_id': customer_record.id})
+    return render(request, 'update_customer.html', {'form':form, 'customer_id': cid})
 
 @login_required(login_url='/webapp/')
 def delete_customer(request, cid):
@@ -86,3 +86,60 @@ def add_customer(request):
     else:
         form = CustomerRecordForm()
     return render(request, 'add_customer.html', {'form':form})
+
+@login_required(login_url='/webapp/')
+def add_product(request):
+    if request.method=="POST":
+        form = ProductInfoForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            messages.success(request, message="New product added")
+            return redirect('products')
+    else:
+        form = ProductInfoForm()
+    return render(request, 'add_products.html', {'form':form})
+
+@login_required(login_url='/webapp/')
+def update_product(request, pid):
+    product_record = Product.objects.get(id=pid)
+    form = ProductInfoForm(request.POST or None, instance=product_record)
+    if form.is_valid():
+        form.save()
+        messages.success(request, message='Product info updated successfully')
+        return redirect('products')
+    return render(request, 'update_product.html', {'form':form, 'product_id':pid})
+
+@login_required(login_url='/webapp/')
+def delete_product(request, pid):
+    product_record = Product.objects.get(id=pid)
+    product_record.delete()
+    messages.success(request, message='Record deleted successfully')
+    return redirect('products')
+
+@login_required(login_url='/webapp/')
+def add_purchases(request):
+    if request.method=="POST":
+        form = PurchaseInfoForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            # update inventory detail as well
+            purchased_quantity = form.data["quantity"]
+            product_id = form.data["product_id"]
+            product_info = Product.objects.get(id=product_id)
+            current_quantity = product_info.inventory_left
+            product_info.inventory_left = int(current_quantity) - int(purchased_quantity)
+            product_info.save()
+            messages.success(request, message="New purchases record added")
+            return redirect('purchases')
+    else:
+        form = PurchaseInfoForm()
+    return render(request, 'add_purchases.html', {'form':form})
+
+@login_required(login_url='/webapp/')
+def delete_purchase(request, prid):
+    purchase_record = Purchase.objects.get(id=prid)
+    purchase_record.delete()
+    messages.success(request, message='Record deleted successfully')
+    return redirect('purchases')
+
+

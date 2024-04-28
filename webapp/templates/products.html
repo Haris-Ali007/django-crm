@@ -13,11 +13,10 @@
         </tr>
     </thead>
     <tbody>
-
         {% if products %}
             {% for product in products %}
                 <tr>
-                    <th scope="row">{{ product.id }}</th>
+                    <th scope="row"><a href="{% url 'update_product' product.id %}">{{ product.id }}</a></th>
                     <td>{{ product.product_name }}</td>
                     <td>{{ product.inventory_left }}</td>
                 </tr>
@@ -25,5 +24,6 @@
         {% endif %}
     </tbody>
 </table>
+<a class="btn btn-primary" href="{% url 'add_product' %}">Add product</a>
  
 {% endblock content %}

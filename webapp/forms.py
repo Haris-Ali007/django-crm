@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Customer
+from .models import Customer, Product, Purchase
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="",widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email'}))
@@ -27,7 +27,6 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].label=''
 
     
-
 class CustomerRecordForm(forms.ModelForm):
     first_name = forms.CharField(required=True, max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
     last_name = forms.CharField(required=True, max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
@@ -38,3 +37,29 @@ class CustomerRecordForm(forms.ModelForm):
     class Meta:
         model = Customer
         exclude = ('id',)
+
+
+class ProductInfoForm(forms.ModelForm):
+    product_name = forms.CharField(required=True, max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Product Name'}))
+    
+    class Meta:
+        model = Product
+        exclude = ('id',)
+
+
+class PurchaseInfoForm(forms.ModelForm):
+    
+    class Meta:
+        model = Purchase
+        exclude = ('id',)
+
+# class PurchaseInfoForm(forms.ModelForm):
+#     customers = Customer.objects.values_list('id', 'first_name', 'last_name')
+#     customers = list(map(lambda x: (x[0], f"{x[1]} {x[2]}"), customers))
+#     products = Product.objects.values_list('id', 'product_name')
+#     customer_id = forms.ChoiceField(label="Customer", choices=customers, required=True, widget=forms.Select(attrs={'class':'form-control'}))
+#     product_id = forms.ChoiceField(label="Product", choices=products, required=True, widget=forms.Select(attrs={'class':'form-control'}))
+
+#     class Meta:
+#         model = Purchase
+#         fields = ['customer_id', 'product_id', 'quantity']
