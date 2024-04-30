@@ -48,18 +48,16 @@ class ProductInfoForm(forms.ModelForm):
 
 
 class PurchaseInfoForm(forms.ModelForm):
-    
+
     class Meta:
         model = Purchase
-        exclude = ('id',)
+        fields = ['customer_id', 'product_id', 'quantity']
 
-# class PurchaseInfoForm(forms.ModelForm):
-#     customers = Customer.objects.values_list('id', 'first_name', 'last_name')
-#     customers = list(map(lambda x: (x[0], f"{x[1]} {x[2]}"), customers))
-#     products = Product.objects.values_list('id', 'product_name')
-#     customer_id = forms.ChoiceField(label="Customer", choices=customers, required=True, widget=forms.Select(attrs={'class':'form-control'}))
-#     product_id = forms.ChoiceField(label="Product", choices=products, required=True, widget=forms.Select(attrs={'class':'form-control'}))
+    def __init__(self, *args, **kwargs):
+        super(PurchaseInfoForm, self).__init__(*args, **kwargs)
 
-#     class Meta:
-#         model = Purchase
-#         fields = ['customer_id', 'product_id', 'quantity']
+        self.fields['customer_id'].widget.attrs['class'] = 'form-control'
+        self.fields['customer_id'].label = 'Customer'
+
+        self.fields['product_id'].widget.attrs['class'] = 'form-control'
+        self.fields['product_id'].label = 'Product'

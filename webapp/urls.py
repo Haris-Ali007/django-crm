@@ -15,5 +15,6 @@ urlpatterns = [
     path('delete_product/<int:pid>', views.delete_product, name='delete_product'),    
     path('add_purchases', views.add_purchases, name='add_purchases'),    
     path('delete_purchase/<int:prid>', views.delete_purchase, name='delete_purchase'),    
+    # path('set_cookie', views.set_cookie, name='set_cookie'),    
 
 ]

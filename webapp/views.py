@@ -5,9 +5,9 @@ from django.contrib import messages
 from .forms import SignUpForm, CustomerRecordForm, ProductInfoForm, PurchaseInfoForm
 from .models import Customer, Product, Purchase
 
+
 def index(request):
     records = Customer.objects.all().order_by('id')
-
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -20,7 +20,12 @@ def index(request):
             messages.warning(request, message='Error logging in user')
             return redirect('index')
     else:
-        return render(request, 'index.html', {'records':records})
+        if not request.COOKIES.get('id'):
+            response = render(request, 'index.html', {'records':records, 'message':"Welcome to our CRM"})
+            response.set_cookie('id', 1) 
+            return response
+        else:
+            return render(request, 'index.html', {'records':records, 'message': 'Welcome Back'})
 
 def logout_user(request):
     logout(request)
