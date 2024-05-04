@@ -36,5 +36,6 @@ This will start the backend server and you will be able to access the site on lo
 * Add, update and delete customer, product records.
 * Add purchase records by selecting the customer and product and quantity from dropdown fields.
 * Inventory update based on the purchased products.
-* Cookies to keep track of session and print dynamic message based on the visit
+* Cookies to keep track of session and print dynamic message based on the visit.
+* API access to connect to a different software
 
